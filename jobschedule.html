@@ -4,8 +4,24 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OPtimal Job Picker</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h1>This program helps to find the optimal job.</h1>
+    <fieldset>
+      <legend>Optimal Job Picker</legend>
+      <div class="main-container">
+        <div class="labelname">
+          <label for="" id="label">JOB Name:</label>
+          <label for="" id="label">Deadline:</label>
+          <label for="" id="label">Profit:</label>
+        </div>
+        <div class="inputfield">
+          <input type="text" id="field" placeholder="Enter JOB Name or ID" />
+          <input type="number" id="field" placeholder="Enter Deadline" />
+          <input type="number" id="field" placeholder="Enter Profit" />
+        </div>
+        <button>Find Best Schedule</button>
+      </div>
+    </fieldset>
   </body>
 </html>
