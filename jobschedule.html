@@ -1,15 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OPtimal Job Picker</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <fieldset>
-      <legend>Optimal Job Picker</legend>
-      <div class="main-container">
+<!-- <fieldset>
+      <legend>Optimal Job Picker</legend> 
+     <div class="main-container">
         <div class="labelname">
           <label for="" id="label">JOB Name:</label>
           <label for="" id="label">Deadline:</label>
@@ -22,6 +13,162 @@
         </div>
         <button>Find Best Schedule</button>
       </div>
-    </fieldset>
+    </fieldset> -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ProfitMax Scheduler</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        /* background: linear-gradient(to right, #3f2b96, #5c258d, #00c9ff); */
+        background: linear-gradient(to right, #d9dcd6cc, #e6e1d8cc);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+
+        color: rgba(5, 72, 124, 0.459);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      .main-container {
+        background: rgba(234, 210, 161, 0.751);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        width: 90%;
+        max-width: 600px;
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      input {
+        padding: 10px;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+      }
+
+      button {
+        padding: 10px 15px;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+        background: #ffffff;
+        color: #0c3b32;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      table {
+        width: 100%;
+        margin-top: 15px;
+        border-collapse: collapse;
+        background: rgba(223, 224, 225, 0.2);
+      }
+
+      th,
+      td {
+        padding: 10px;
+        text-align: center;
+        border: 1px solid white;
+      }
+
+      .output {
+        margin-top: 20px;
+        background: #98959533;
+        padding: 15px;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main-container">
+      <h2>ProfitMax Scheduler</h2>
+
+      <input type="text" id="jobId" placeholder="Job ID (A, B...)" />
+      <input type="number" id="deadline" placeholder="Deadline" />
+      <input type="number" id="profit" placeholder="Profit" />
+      <button onclick="addJob()">Add Job</button>
+      <button onclick="scheduleJobs()">Find Best Schedule</button>
+
+      <table id="jobTable">
+        <thead>
+          <tr>
+            <th>Job ID</th>
+            <th>Deadline</th>
+            <th>Profit</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div class="output" id="output"></div>
+    </div>
+
+    <script>
+      let jobs = [];
+
+      function addJob() {
+        const id = document.getElementById("jobId").value.trim();
+        const deadline = parseInt(document.getElementById("deadline").value);
+        const profit = parseInt(document.getElementById("profit").value);
+
+        if (id && !isNaN(deadline) && !isNaN(profit)) {
+          jobs.push({ id, deadline, profit });
+          updateTable();
+          document.getElementById("jobId").value = "";
+          document.getElementById("deadline").value = "";
+          document.getElementById("profit").value = "";
+        } else {
+          alert("Please fill all fields correctly.");
+        }
+      }
+
+      function updateTable() {
+        const tbody = document.querySelector("#jobTable tbody");
+        tbody.innerHTML = "";
+        jobs.forEach((job) => {
+          const row = `<tr><td>${job.id}</td><td>${job.deadline}</td><td>${job.profit}</td></tr>`;
+          tbody.innerHTML += row;
+        });
+      }
+
+      function scheduleJobs() {
+        // Sort jobs by descending profit
+        const sortedJobs = [...jobs].sort((a, b) => b.profit - a.profit);
+        const maxDeadline = Math.max(...jobs.map((job) => job.deadline));
+        const result = Array(maxDeadline).fill(null);
+        let totalProfit = 0;
+
+        for (let job of sortedJobs) {
+          for (let j = job.deadline - 1; j >= 0; j--) {
+            if (!result[j]) {
+              result[j] = job;
+              totalProfit += job.profit;
+              break;
+            }
+          }
+        }
+
+        const scheduledJobs = result
+          .filter(Boolean)
+          .map((job) => job.id)
+          .join(", ");
+        document.getElementById(
+          "output"
+        ).innerHTML = `<strong>Selected Jobs:</strong> ${
+          scheduledJobs || "None"
+        }<br>
+         <strong>Total Profit:</strong> ₹${totalProfit}`;
+      }
+    </script>
   </body>
 </html>
